@@ -1,5 +1,7 @@
 # Pandabridge
 
+[![Java CI with Gradle](https://github.com/jyrama/pandabridge/actions/workflows/gradle.yml/badge.svg)](https://github.com/jyrama/pandabridge/actions/workflows/gradle.yml)
+
 ## Installing
 
 Install Forge into your Minecraft installation and copy `pandabridgemod.jar` to the `mods` folder of your server setup.
