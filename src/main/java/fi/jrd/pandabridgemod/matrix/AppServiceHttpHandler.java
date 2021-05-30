@@ -21,6 +21,10 @@ import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.CharsetUtil;
 
 public class AppServiceHttpHandler extends SimpleChannelInboundHandler {
+    public enum Query {
+        TRANSACTION, USERS, ROOMS
+    }
+
     private static final Gson gson = new Gson();
 
     private HttpRequest request;
@@ -58,6 +62,8 @@ public class AppServiceHttpHandler extends SimpleChannelInboundHandler {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
+        Query queryType = null;
+
         if (msg instanceof HttpRequest) {
             HttpRequest request = this.request = (HttpRequest) msg;
             if (HttpUtil.is100ContinueExpected(request)) {
@@ -66,10 +72,13 @@ public class AppServiceHttpHandler extends SimpleChannelInboundHandler {
             responseData.setLength(0);
 
             if (request.uri().startsWith("/_matrix/app/v1/transactions/")) {
+                queryType = Query.TRANSACTION;
                 PandabridgeMod.logger.debug("New transaction: {}", request.uri());
             } else if (request.uri().startsWith("/_matrix/app/v1/users/")) {
+                queryType = Query.USERS;
                 PandabridgeMod.logger.debug("Users query: ", request.uri());
             } else if (request.uri().startsWith("/_matrix/app/v1/rooms/")) {
+                queryType = Query.ROOMS;
                 PandabridgeMod.logger.debug("Rooms query:", request.uri());
             }
 
@@ -80,10 +89,15 @@ public class AppServiceHttpHandler extends SimpleChannelInboundHandler {
             String strContent = httpContent.content().toString(CharsetUtil.UTF_8);
             PandabridgeMod.logger.debug("StrContent: {}", strContent);
 
-            Transaction tx = gson.fromJson(strContent, Transaction.class);
-
-            for (RoomMessageEvent message : tx.getAllTextMessages()) {
-                PandabridgeMod.broadcast(message.sender(), message.body());
+            switch (queryType) {
+                case TRANSACTION:
+                    Transaction tx = gson.fromJson(strContent, Transaction.class);
+                    for (RoomMessageEvent message : tx.getAllTextMessages()) {
+                        PandabridgeMod.broadcast(message.sender(), message.body());
+                    }
+                    break;
+                default:
+                    break;
             }
 
             if (msg instanceof LastHttpContent) {
