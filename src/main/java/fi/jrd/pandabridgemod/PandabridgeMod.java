@@ -100,7 +100,7 @@ public class PandabridgeMod {
 
     @SubscribeEvent
     public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-        String msg = String.format("Logged OUT: {}", event.player.getName());
+        String msg = String.format("Logged OUT: %s", event.player.getName());
         mainRoom.sendMessage(msg);
     }
 
