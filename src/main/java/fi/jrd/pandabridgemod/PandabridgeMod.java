@@ -1,6 +1,5 @@
 package fi.jrd.pandabridgemod;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.text.ITextComponent;
@@ -38,7 +37,6 @@ public class PandabridgeMod {
     public static Logger logger;
 
     public static String host;
-    // private static String room = "!pvdbRlGCHHyuydEOWn:garm.jrd.fi"; // mine
     public static String authorization;
 
     private static Homeserver homeserver;
