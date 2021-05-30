@@ -73,13 +73,13 @@ public class PandabridgeMod {
             throw e;
         }
 
-        // try {
-        //     new AppService().run();
-        //     logger.info("AppService started");
-        // } catch (InterruptedException e) {
-        //     logger.error("Starting appservice server failed!");
-        //     e.printStackTrace();
-        // }
+        try {
+            new AppService().run();
+            logger.info("AppService started");
+        } catch (InterruptedException e) {
+            logger.error("Starting appservice server failed!");
+            e.printStackTrace();
+        }
     }
 
     @EventHandler
