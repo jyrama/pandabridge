@@ -28,5 +28,6 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: Package
-        path: build/libs
+        name: Mod
+        path: build/libs/*
+        if-no-files-found: error
