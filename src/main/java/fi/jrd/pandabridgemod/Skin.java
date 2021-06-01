@@ -1,6 +1,7 @@
 package fi.jrd.pandabridgemod;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -36,5 +37,33 @@ public class Skin {
 
     public BufferedImage getHead() {
         return this.skin.getSubimage(8, 8, 8, 8);
+    }
+
+    class Cache {
+        private File cacheDir;
+        private File[] knownFiles;
+
+        Cache(File cacheDir) {
+            if (!cacheDir.exists()) {
+                cacheDir.mkdir();
+            }
+
+            if (!cacheDir.isDirectory()) {
+                PandabridgeMod.logger.error("Skin cache directory does not point to a directory: {}",
+                        cacheDir.getAbsolutePath());
+            }
+
+            this.cacheDir = cacheDir;
+            knownFiles = cacheDir.listFiles();
+        }
+
+        public void insertImage(BufferedImage image, String id) {
+            try {
+                File diskFile = new File(this.cacheDir, id + ".png");
+                ImageIO.write(image, "png", diskFile);
+            } catch (Exception e) {
+                PandabridgeMod.logger.error("Failed to save image to skin cache: {}", e);
+            }
+        }
     }
 }
