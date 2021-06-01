@@ -18,7 +18,7 @@ public class User {
     User(String id, Homeserver server) {
         this.server = server;
 
-        String profileUrl = String.format("%s_matrix/client/r0/profile/%s", this.server.getAddress(), id);
+        String profileUrl = String.format("%s/_matrix/client/r0/profile/%s", this.server.getAddress(), id);
 
         try {
             Response res = Request.get(profileUrl).addHeader("Authorization", PandabridgeMod.authorization).execute();
