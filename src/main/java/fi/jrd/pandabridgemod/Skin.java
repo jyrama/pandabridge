@@ -1,9 +1,13 @@
 package fi.jrd.pandabridgemod;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -58,8 +62,24 @@ public class Skin {
         }
 
         public void insertImage(BufferedImage image, String id) {
+            MessageDigest digest = null;
+            ByteArrayOutputStream buf = new ByteArrayOutputStream();
             try {
-                File diskFile = new File(this.cacheDir, id + ".png");
+                digest = MessageDigest.getInstance("sha1");
+                ImageIO.write(image, "png", buf);
+                digest.update(buf.toByteArray());
+            } catch (NoSuchAlgorithmException e1) {
+                PandabridgeMod.logger.error("Your Java is bad, it's missing SHA1 provider!");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            String hash = Base64.getEncoder().encodeToString(digest.digest());
+            String filename = hash + "-" + id + ".png";
+
+            try {
+                File diskFile = new File(this.cacheDir, filename);
                 ImageIO.write(image, "png", diskFile);
             } catch (Exception e) {
                 PandabridgeMod.logger.error("Failed to save image to skin cache: {}", e);
